@@ -85,7 +85,7 @@ app.listen(PORT, () => {
     console.log("");
     console.log("=================================");
     console.log("Servidor iniciado correctamente");
-    console.log(`http://localhost:${PORT}`);
+    console.log(`https://lyra-70jm.onrender.com:${PORT}`);
     console.log("=================================");
     console.log("");
 

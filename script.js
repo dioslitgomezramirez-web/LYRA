@@ -17,7 +17,7 @@ async function sendMessage() {
     try {
 
         const response = await fetch(
-            "http://localhost:3000/chat",
+            "https://lyra-70jm.onrender.com/chat",
             {
                 method: "POST",
 
