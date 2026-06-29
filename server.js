@@ -12,6 +12,10 @@ app.use(express.json());
 
 app.post("/chat", async (req, res) => {
 
+    app.get('/', (req, res) => {
+    res.sendFile(new URL('./index.html', import.meta.url).pathname);
+});
+
     const { message } = req.body;
 
     if (!message) {
