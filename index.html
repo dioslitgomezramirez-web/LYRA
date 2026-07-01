@@ -5,138 +5,178 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Asistente IA</title>
     <style>
-        /* Estilos Globales y Fondo Pastel */
+        :root {
+            color-scheme: light;
+            --bg: #f3f6fb;
+            --card: #ffffff;
+            --text: #1f2937;
+            --muted: #6b7280;
+            --primary: #3b82f6;
+            --primary-dark: #2563eb;
+            --user-bg: #e0e7ff;
+            --bot-bg: #f8fafc;
+            --border: rgba(148, 163, 184, 0.24);
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
         body {
             margin: 0;
-            padding: 0;
-            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-            background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%); /* Tonos pastel cálidos */
-            height: 100vh;
+            min-height: 100vh;
+            font-family: Inter, 'Segoe UI', sans-serif;
+            background: radial-gradient(circle at top left, rgba(59, 130, 246, 0.18), transparent 30%),
+                        linear-gradient(180deg, #eef4ff 0%, #f8fafc 100%);
             display: flex;
-            justify-content: center;
             align-items: center;
+            justify-content: center;
+            padding: 24px;
         }
 
-        /* Contenedor Principal - Efecto Cristal Esmerilado */
         .chat-container {
             width: 100%;
-            max-width: 450px;
-            height: 85vh;
-            background: rgba(255, 255, 255, 0.25);
-            backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
-            border-radius: 24px;
-            border: 1px solid rgba(255, 255, 255, 0.4);
-            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.15);
+            max-width: 520px;
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 28px;
+            box-shadow: 0 28px 60px rgba(15, 23, 42, 0.12);
+            overflow: hidden;
             display: flex;
             flex-direction: column;
-            overflow: hidden;
         }
 
-        /* Área de Mensajes */
+        .chat-header {
+            padding: 24px 24px 18px;
+            background: #ffffff;
+            border-bottom: 1px solid rgba(148, 163, 184, 0.18);
+        }
+
+        .chat-title {
+            margin: 0;
+            font-size: 1.25rem;
+            color: var(--text);
+            letter-spacing: -0.02em;
+        }
+
+        .chat-subtitle {
+            margin: 8px 0 0;
+            color: var(--muted);
+            font-size: 0.95rem;
+            line-height: 1.5;
+        }
+
         .chat-box {
             flex: 1;
-            padding: 20px;
-            overflow-y: auto;
+            padding: 22px;
             display: flex;
             flex-direction: column;
-            gap: 12px;
-            scroll-behavior: smooth;
+            gap: 16px;
+            overflow-y: auto;
+            background: #f8fbff;
         }
 
-        /* Animación física para los mensajes */
-        @keyframes popIn {
-            0% { transform: translateY(15px) scale(0.95); opacity: 0; }
-            100% { transform: translateY(0) scale(1); opacity: 1; }
+        .chat-box::-webkit-scrollbar {
+            width: 8px;
         }
 
-        /* Burbujas de Mensaje */
+        .chat-box::-webkit-scrollbar-thumb {
+            background: rgba(59, 130, 246, 0.2);
+            border-radius: 999px;
+        }
+
         .message {
-            max-width: 80%;
-            padding: 12px 16px;
-            border-radius: 18px;
-            font-size: 15px;
-            line-height: 1.4;
-            animation: popIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
-            word-wrap: break-word;
-        }
-
-        .user-message {
-            align-self: flex-end;
-            background: rgba(255, 255, 255, 0.6);
-            color: #333;
-            border-bottom-right-radius: 4px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            max-width: 85%;
+            padding: 16px 18px;
+            border-radius: 22px;
+            font-size: 0.98rem;
+            line-height: 1.65;
+            position: relative;
+            animation: popIn 0.28s ease-out;
+            word-break: break-word;
         }
 
         .bot-message {
             align-self: flex-start;
-            background: rgba(255, 255, 255, 0.9);
-            color: #444;
-            border-bottom-left-radius: 4px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            background: var(--bot-bg);
+            color: var(--text);
+            border-top-left-radius: 4px;
         }
 
-        /* Área de Entrada de Texto */
+        .user-message {
+            align-self: flex-end;
+            background: var(--user-bg);
+            color: var(--text);
+            border-top-right-radius: 4px;
+        }
+
+        .message.error {
+            border: 1px solid #fca5a5;
+            background: #fef2f2;
+            color: #b91c1c;
+        }
+
+        @keyframes popIn {
+            from { opacity: 0; transform: translateY(12px) scale(0.98); }
+            to { opacity: 1; transform: translateY(0) scale(1); }
+        }
+
         .input-area {
-            display: flex;
-            padding: 15px;
-            background: rgba(255, 255, 255, 0.1);
-            border-top: 1px solid rgba(255, 255, 255, 0.3);
-            gap: 10px;
+            display: grid;
+            grid-template-columns: 1fr auto;
+            gap: 12px;
+            padding: 18px 22px 22px;
+            background: #ffffff;
+            border-top: 1px solid rgba(148, 163, 184, 0.18);
         }
 
-        input[type="text"] {
-            flex: 1;
-            padding: 12px 20px;
-            border-radius: 20px;
-            border: 1px solid rgba(255, 255, 255, 0.5);
-            background: rgba(255, 255, 255, 0.5);
-            font-size: 15px;
-            color: #333;
+        .input-area input {
+            width: 100%;
+            min-height: 52px;
+            border-radius: 16px;
+            border: 1px solid rgba(148, 163, 184, 0.24);
+            padding: 0 18px;
+            font-size: 1rem;
+            color: var(--text);
+            background: #f8fafc;
             outline: none;
-            transition: all 0.3s ease;
+            transition: border-color 0.18s ease, box-shadow 0.18s ease;
         }
 
-        input[type="text"]:focus {
-            background: rgba(255, 255, 255, 0.8);
-            box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.3);
+        .input-area input:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.12);
+            background: #ffffff;
         }
 
-        button {
-            padding: 0 20px;
-            border-radius: 20px;
+        .input-area button {
+            min-width: 120px;
             border: none;
-            background: #a18cd1; /* Morado pastel */
-            color: white;
-            font-weight: bold;
+            border-radius: 16px;
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: #fff;
+            font-weight: 700;
+            letter-spacing: 0.01em;
             cursor: pointer;
-            transition: transform 0.2s, background 0.3s;
-            box-shadow: 0 4px 15px rgba(161, 140, 209, 0.4);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
         }
 
-        button:hover {
-            background: #8f77c4;
-            transform: translateY(-2px);
+        .input-area button:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 14px 30px rgba(59, 130, 246, 0.18);
         }
 
-        button:active {
+        .input-area button:active {
             transform: translateY(0);
-        }
-
-        /* Scrollbar personalizado */
-        .chat-box::-webkit-scrollbar {
-            width: 6px;
-        }
-        .chat-box::-webkit-scrollbar-thumb {
-            background: rgba(255, 255, 255, 0.5);
-            border-radius: 10px;
         }
     </style>
 </head>
 <body>
-
     <div class="chat-container">
+        <header class="chat-header">
+            <h1 class="chat-title">Asistente Corporativo</h1>
+            <p class="chat-subtitle">Envía tu pregunta y recibirás una respuesta clara y profesional.</p>
+        </header>
         <div class="chat-box" id="chat-box">
             <div class="message bot-message">¡Hola! Soy tu asistente. ¿En qué te puedo ayudar hoy?</div>
         </div>
